@@ -13,7 +13,8 @@ export class AuthHelper {
    */
   async loginNoCallback() {
     // Ensure Vue app is ready before clicking
-    await this.page.waitForSelector('#loaded', { timeout: 10000 });
+    // Element is hidden, so we wait for it to exist in DOM (attached)
+    await this.page.waitForSelector('#loaded', { state: 'attached', timeout: 10000 });
 
     // Click login button
     await this.page.click('#login_redirect');
@@ -179,6 +180,7 @@ export class AuthHelper {
    * Waits for Vue app's #loaded indicator
    */
   async waitForReady() {
-    await this.page.waitForSelector('#loaded', { timeout: 10000 });
+    // Element is hidden, so we wait for it to exist in DOM (attached)
+    await this.page.waitForSelector('#loaded', { state: 'attached', timeout: 10000 });
   }
 }

@@ -10,19 +10,20 @@ export async function resetTests(page: Page) {
 
   // Wait for Vue app to be ready (critical!)
   // The #loaded element appears when Vue has finished initializing
-  await page.waitForSelector('#loaded', { timeout: 10000 });
+  // Note: Element is hidden, so we wait for 'attached' not 'visible'
+  await page.waitForSelector('#loaded', { state: 'attached', timeout: 10000 });
 
   await page.click('#reset-config');
   await page.evaluate(() => window.localStorage.clear());
 
   // Wait for app to be ready again after reset
-  await page.waitForSelector('#loaded', { timeout: 10000 });
+  await page.waitForSelector('#loaded', { state: 'attached', timeout: 10000 });
 
   await page.click('[data-cy=use-node-oidc-provider]');
   await page.click('#logout');
 
   // Final wait for app to stabilize after configuration changes
-  await page.waitForSelector('#loaded', { timeout: 10000 });
+  await page.waitForSelector('#loaded', { state: 'attached', timeout: 10000 });
 }
 
 /**
@@ -69,7 +70,8 @@ export async function setScope(page: Page, scope: string) {
  */
 export async function whenReady(page: Page) {
   // Wait for Vue app to be ready - matches Cypress behavior
-  await page.waitForSelector('#loaded', { timeout: 10000 });
+  // Element is hidden, so we wait for it to exist in DOM (attached)
+  await page.waitForSelector('#loaded', { state: 'attached', timeout: 10000 });
   return page;
 }
 
