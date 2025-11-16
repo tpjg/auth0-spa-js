@@ -50,6 +50,10 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         // Chromium-specific settings
         viewport: { width: 1000, height: 1000 },
+        // Launch options for containerized environments
+        launchOptions: {
+          args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        },
       },
     },
     {
