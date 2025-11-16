@@ -1,15 +1,11 @@
 name: Browserstack
 
 on:
-  merge_group:
+  # Run on-demand or weekly for comprehensive real device testing
+  # Playwright now handles primary cross-browser testing
   workflow_dispatch:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday at midnight UTC
 
 permissions:
   contents: read
