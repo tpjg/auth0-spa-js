@@ -12,11 +12,14 @@ export class AuthHelper {
    * Navigates to auth provider, fills credentials, and submits
    */
   async loginNoCallback() {
+    // Ensure Vue app is ready before clicking
+    await this.page.waitForSelector('#loaded', { timeout: 10000 });
+
     // Click login button
     await this.page.click('#login_redirect');
 
     // Wait for Auth0/OIDC provider login page
-    await this.page.waitForURL(/authorize/);
+    await this.page.waitForURL(/authorize/, { timeout: 30000 });
 
     // Fill credentials
     await this.page.locator('.login-card input[name=login]').clear();
@@ -173,9 +176,9 @@ export class AuthHelper {
 
   /**
    * Wait for the application to be ready
-   * Waits for network to be idle
+   * Waits for Vue app's #loaded indicator
    */
   async waitForReady() {
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForSelector('#loaded', { timeout: 10000 });
   }
 }

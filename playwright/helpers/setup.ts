@@ -7,10 +7,22 @@ import { Page } from '@playwright/test';
  */
 export async function resetTests(page: Page) {
   await page.goto('http://127.0.0.1:3000');
+
+  // Wait for Vue app to be ready (critical!)
+  // The #loaded element appears when Vue has finished initializing
+  await page.waitForSelector('#loaded', { timeout: 10000 });
+
   await page.click('#reset-config');
   await page.evaluate(() => window.localStorage.clear());
+
+  // Wait for app to be ready again after reset
+  await page.waitForSelector('#loaded', { timeout: 10000 });
+
   await page.click('[data-cy=use-node-oidc-provider]');
   await page.click('#logout');
+
+  // Final wait for app to stabilize after configuration changes
+  await page.waitForSelector('#loaded', { timeout: 10000 });
 }
 
 /**
@@ -52,10 +64,12 @@ export async function setScope(page: Page, scope: string) {
 
 /**
  * Wait for the application to be ready
+ * Waits for the Vue app's #loaded indicator
  * @param page Playwright page object
  */
 export async function whenReady(page: Page) {
-  await page.waitForLoadState('networkidle');
+  // Wait for Vue app to be ready - matches Cypress behavior
+  await page.waitForSelector('#loaded', { timeout: 10000 });
   return page;
 }
 
