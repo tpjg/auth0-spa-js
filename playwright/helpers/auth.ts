@@ -16,11 +16,12 @@ export class AuthHelper {
     // Element is hidden, so we wait for it to exist in DOM (attached)
     await this.page.waitForSelector('#loaded', { state: 'attached', timeout: 10000 });
 
-    // Click login button
-    await this.page.click('#login_redirect');
-
-    // Wait for Auth0/OIDC provider login page
-    await this.page.waitForURL(/authorize/, { timeout: 30000 });
+    // Click login button and wait for navigation
+    // The click triggers a redirect, so we need to wait for it
+    await Promise.all([
+      this.page.waitForURL(/authorize/, { timeout: 30000 }),
+      this.page.click('#login_redirect')
+    ]);
 
     // Fill credentials
     await this.page.locator('.login-card input[name=login]').clear();
