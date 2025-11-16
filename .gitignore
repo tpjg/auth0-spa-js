@@ -6,9 +6,10 @@ stats.html
 cypress/screenshots
 cypress/videos
 cypress.env.json
+playwright-report
+test-results
 .release
 .idea
-test-results
 yarn.lock
 .DS_Store
 release-tmp*
